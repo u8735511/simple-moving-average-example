@@ -9,14 +9,12 @@ import os
 import yfinance as yf
 from pandas_datareader import data
 
-data_dir='\stock_data'
+data_dir='.\stock_data'
+list_dir='.\stock_list'
 
 def download_stock(f_name):
-    #date_s=add_months(date_e,-month)    
     #下載stock日資料
     try : 
-        #df = web.get_data_yahoo([f_name],period='max',interval='1d')
-        #df = web.get_data_yahoo([f_name],interval='d')
         df=yf.download(f_name, period='max',interval='1d')
         
         if df.empty == False:
@@ -36,7 +34,6 @@ def download_stock(f_name):
             df.insert(ll+3,column="MA60",value=ma60)
             df.insert(ll+4,column="MA120",value=ma120)
             df.insert(ll+5,column="MA240",value=ma240)
-            #df.insert(ll+6,column="MarketCap",value=marketCap)
             df.to_csv('{}/{}_max.csv'.format(data_dir,f_name))
             close=df['Close'].tail(1).mean()
             m5=round(df['MA5'].tail(1).mean(),3)
@@ -77,12 +74,10 @@ def download_stock(f_name):
                 f240=""
             fp0 = open("do_moving_stock.txt", "a") 
             if (len(f0+f5+f10+f20+f60+f120+f240)>0):
-                #fp0.write(f_name+" 收盤:"+str(close)+" 週:"+str(m5)+" 半月:"+str(m10)+" 月:"+str(m20)+" 季:"+str(m60)+" 半年:"+str(m120)+" 年:"+str(m240)+f0+f5+f10+f20+f60+f120+f240+"\n")
                 fp0.write(f0+f_name+" 收盤:"+str(close)+" 週線:"+str(m5)+" 市值:"+str(marketcap)+f5+f10+f20+f60+f120+f240+"\n")
             elif (close<m5):
                 fp0.write(f_name+" 收盤:"+str(close)+" 週線:"+str(m5)+f5+" 市值:"+str(marketcap)+"\n")    
             fp0.close()                
-            #print (f_name,"收盤:",close,"週:",m5,"半月:",m10,"月:",m20,"季:",m60,"半年:",m120,"年:",m240,f5,f10,f20,f60,f120,f240) 
 
         else :
             pass
@@ -106,7 +101,7 @@ def main():
         os.remove("do_moving_stock.txt")
         print ("刪除","do_moving_stock.txt")
         
-    stock_check="stock_list\\list_stock_buy-us.txt"
+    stock_check=list_dir+"\\list_stock_buy-us.txt"
     get_data(stock_check)  
     
 if __name__ == '__main__':

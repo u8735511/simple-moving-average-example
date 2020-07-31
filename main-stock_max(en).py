@@ -10,13 +10,12 @@ import yfinance as yf
 from pandas_datareader import data
 
 data_dir='.\stock_data'
+list_dir='.\stock_list'
 
 def download_stock(f_name):
     #date_s=add_months(date_e,-month)    
     #download stock daily data
     try : 
-        #df = web.get_data_yahoo([f_name],period='max',interval='1d')
-        #df = web.get_data_yahoo([f_name],interval='d')
         df=yf.download(f_name, period='max',interval='1d')
         
         if df.empty == False:
@@ -36,7 +35,6 @@ def download_stock(f_name):
             df.insert(ll+3,column="MA60",value=ma60)
             df.insert(ll+4,column="MA120",value=ma120)
             df.insert(ll+5,column="MA240",value=ma240)
-            #df.insert(ll+6,column="MarketCap",value=marketCap)
             df.to_csv('{}/{}_max.csv'.format(data_dir,f_name))
             close=df['Close'].tail(1).mean()
             m5=round(df['MA5'].tail(1).mean(),3)
@@ -104,7 +102,7 @@ def main():
         os.remove("do_moving_stock.txt")
         print ("delete","do_moving_stock.txt")
         
-    stock_check="stock_list\\list_stock_buy-us.txt"
+    stock_check=list_dir+"\\list_stock_buy-us.txt"
     get_data(stock_check)  
     
 if __name__ == '__main__':
